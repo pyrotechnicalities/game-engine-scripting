@@ -24,7 +24,7 @@ public class Calculator : MonoBehaviour
             clearPrevInput = false;
         }
 
-        label.text = string.Empty + input;
+        label.text += input;
     }
 
     public void SetEquationAsAdd()
@@ -55,29 +55,37 @@ public class Calculator : MonoBehaviour
         equationType = EquationType.DIVIDE;
     }
 
-    private void Add(int input)
+    private void Add()
     {
-        label.text = (input + prevInput).ToString();
+        float currentInput = float.Parse(label.text);
+        float result = currentInput + prevInput;
+        label.text = result.ToString();
     }
 
-    private void Subtract(int input)
+    private void Subtract()
     {
-        label.text = (input - prevInput).ToString();
+        float currentInput = float.Parse(label.text);
+        float result = currentInput - prevInput;
+        label.text = result.ToString();
     }
 
-    private void Multiply(int input)
+    private void Multiply()
     {
-        label.text = (input * prevInput).ToString();
+        float currentInput = float.Parse(label.text);
+        float result = currentInput * prevInput;
+        label.text = result.ToString();
     }
 
-    private void Divide(int input)
+    private void Divide()
     {
-        label.text = (input % prevInput).ToString();
+        float currentInput = float.Parse(label.text);
+        float result = currentInput / prevInput;
+        label.text = result.ToString();
     }
 
     public void Clear()
     {
-        label.text = string.Empty;
+        label.text = "0";
         clearPrevInput = true;
         prevInput = 0;
         equationType = EquationType.None;        
@@ -85,10 +93,10 @@ public class Calculator : MonoBehaviour
 
     public void Calculate()
     {
-        if (equationType == EquationType.ADD) Add(1);
-        else if (equationType == EquationType.SUBTRACT) Subtract(2);
-        else if (equationType == EquationType.MULTIPLY) Multiply(3);
-        else if (equationType == EquationType.DIVIDE) Divide(4); 
+        if (equationType == EquationType.ADD) Add();
+        else if (equationType == EquationType.SUBTRACT) Subtract();
+        else if (equationType == EquationType.MULTIPLY) Multiply();
+        else if (equationType == EquationType.DIVIDE) Divide(); 
     }
 
     public enum EquationType
