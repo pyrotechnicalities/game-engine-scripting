@@ -24,9 +24,7 @@ public class Calculator : MonoBehaviour
             clearPrevInput = false;
         }
 
-
-        //TODO: Add the input passed into the AddInput function to the current value of the label
-        //      Hint. You can perform the + operations on string data to combine them
+        label.text = string.Empty + input;
     }
 
     public void SetEquationAsAdd()
@@ -74,12 +72,12 @@ public class Calculator : MonoBehaviour
 
     private void Divide(int input)
     {
-        label.text = (input / prevInput).ToString();
+        label.text = (input % prevInput).ToString();
     }
 
     public void Clear()
     {
-        //TODO: Reset the state of your calculator... reset the display value to a 0
+        label.text = string.Empty;
         clearPrevInput = true;
         prevInput = 0;
         equationType = EquationType.None;        
@@ -87,10 +85,10 @@ public class Calculator : MonoBehaviour
 
     public void Calculate()
     {
-      //  if (equationType == EquationType.ADD) Add();
-     //   else if (equationType == EquationType.SUBTRACT) Subtract();
-     //   else if (equationType == EquationType.MULTIPLY) Multiply();
-     //   else if (equationType == EquationType.DIVIDE) Divide();
+        if (equationType == EquationType.ADD) Add(1);
+        else if (equationType == EquationType.SUBTRACT) Subtract(2);
+        else if (equationType == EquationType.MULTIPLY) Multiply(3);
+        else if (equationType == EquationType.DIVIDE) Divide(4); 
     }
 
     public enum EquationType
