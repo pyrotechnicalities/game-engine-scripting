@@ -34,6 +34,8 @@ namespace Battleship
         private int score;
         // Total time game has been running
         private int time;
+        private CellType cellType;
+        int randomNumber;
 
         // Parent of all cells
         [SerializeField] Transform gridRoot;
@@ -118,6 +120,14 @@ namespace Battleship
             score++;
             scoreLabel.text = string.Format("Score: {0}", score);
         }
+        void IncrementTime()
+        {
+            time++;
+            // Update time label, displaying in the mm:ss format
+            // ss should always have 2 digits
+            // mm should only display as many digits as necessary
+            timeLabel.text = string.Format("{0}:{1}", time / 60, (time % 60).ToString("00"));
+        }
         public void Fire()
         {
             // Checks if the hit data in the cell is true or false.
@@ -137,6 +147,51 @@ namespace Battleship
             else
             {
                 ShowMiss();
+            }
+        }
+
+        public void Restart()
+        {
+            int RandomNumber = Random.Range(0, 11);
+            RandomNumber = randomNumber;
+            winLabel.SetActive(false);
+            UnselectCurrentCell();
+            col = 0;
+            row = 0;
+            SelectCurrentCell();
+            time = 0;
+            score = 0;
+            timeLabel.text = string.Format("{0}:{1}", time / 60, (time % 60).ToString("00"));
+            scoreLabel.text = string.Format("Score: {0}", score);
+
+            for (int row = 0; row < nRows; row++)
+            {
+                for (int col = 0; col < nCols; col++)
+                {
+                    // Turns off game objects?? I don't think it actually does, see TO DO list
+                    hits[row, col] = false;
+                }
+            }
+
+            /* TO DO:
+         * -The Hit and Miss objects on each cell need to be reset (turned off).
+         * Randomly change the position of the ships when the user clicks Restart button.
+         * Iterate through the grid and do a random roll to see if the cell should be a 0 or a 1.
+         * -Example: Do a random roll between 0 and 10, if the number is > 5 then make it a 1, otherwise make it a 0 
+         */
+
+            // This code is trying to solve the randomly change postitions thing
+            for (int i = 0; i < nRows * nCols; i++)
+            {
+                if (randomNumber >= 5)
+                {
+                    cellType = CellType.Ship;
+                }
+                else
+                {
+                    cellType = CellType.Empty;
+                }
+                Instantiate(cellPrefab, gridRoot);
             }
         }
         void TryEndGame()
@@ -159,28 +214,10 @@ namespace Battleship
             // Stop timer
             CancelInvoke("IncrementTime");
         }
-        void IncrementTime()
+        public enum CellType 
         {
-            time++;
-            // Update time label, displaying in the mm:ss format
-            // ss should always have 2 digits
-            // mm should only display as many digits as necessary
-            timeLabel.text = string.Format("{0}:{1}", time/60, (time%60).ToString("00"));
+            Empty = 0,
+            Ship = 1
         }
-
-        /* TO DO:
-         * Change Hit image to be of a destroyed ship (put in textures folder)
-         * Replace the buttons with Arrow images that do not have text
-         * Find a better "Fire" button image
-         * Create Restart button
-         * Restart should: Unselect the current cell. 
-         * -Reset the row and column to 0. Select the new cell. 
-         * -And reset the hit 2D array data to all false. 
-         * -The timer needs to be reset as well and the score. 
-         * -The Hit and Miss objects on each cell need to be reset (turned off).
-         * Randomly change the position of the ships when the user clicks Restart button.
-         * Iterate through the grid and do a random roll to see if the cell should be a 0 or a 1.
-         * -Example: Do a random roll between 0 and 10, if the number is > 5 then make it a 1, otherwise make it a 0 
-         */
     }
 }
