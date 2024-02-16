@@ -194,6 +194,7 @@ namespace Battleship
                 Instantiate(cellPrefab, gridRoot);
             }
         }
+        [ContextMenu("End Game")]
         void TryEndGame()
         {
             // Check every row
