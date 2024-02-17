@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
@@ -34,8 +35,6 @@ namespace Battleship
         private int score;
         // Total time game has been running
         private int time;
-        private CellType cellType;
-        int randomNumber;
 
         // Parent of all cells
         [SerializeField] Transform gridRoot;
@@ -64,6 +63,12 @@ namespace Battleship
         }
         Transform GetCurrentCell()
         {
+            int index = (row * nCols) + col;
+            return gridRoot.GetChild(index);
+        }
+        Transform GetTotalCells(int row, int col)
+        {
+            // Using local variables to get all of the cells rather than the current one 
             int index = (row * nCols) + col;
             return gridRoot.GetChild(index);
         }
@@ -112,8 +117,8 @@ namespace Battleship
             // Get current cell
             Transform cell = GetCurrentCell();
             //Set miss image "on"
-            Transform hit = cell.Find("Miss");
-            hit.gameObject.SetActive(true);
+            Transform miss = cell.Find("Miss");
+            miss.gameObject.SetActive(true);
         }
         void IncrementScore()
         {
@@ -148,12 +153,13 @@ namespace Battleship
             {
                 ShowMiss();
             }
+
+            TryEndGame();
         }
 
         public void Restart()
         {
-            int RandomNumber = Random.Range(0, 11);
-            RandomNumber = randomNumber;
+            // Resets the game, randomizes ships, and turns off hit and miss images
             winLabel.SetActive(false);
             UnselectCurrentCell();
             col = 0;
@@ -168,33 +174,32 @@ namespace Battleship
             {
                 for (int col = 0; col < nCols; col++)
                 {
-                    // Turns off game objects?? I don't think it actually does, see TO DO list
+                    ResetCells(row, col);
                     hits[row, col] = false;
                 }
             }
 
-            /* TO DO:
-         * -The Hit and Miss objects on each cell need to be reset (turned off).
-         * Randomly change the position of the ships when the user clicks Restart button.
-         * Iterate through the grid and do a random roll to see if the cell should be a 0 or a 1.
-         * -Example: Do a random roll between 0 and 10, if the number is > 5 then make it a 1, otherwise make it a 0 
-         */
-
-            // This code is trying to solve the randomly change postitions thing
-            for (int i = 0; i < nRows * nCols; i++)
+            RandomizeShips();
+        }
+        void ResetCells(int row, int col)
+        {
+            Transform cell = GetTotalCells(row, col);
+            Transform hit = cell.Find("Hit");
+            Transform miss = cell.Find("Miss");
+            hit.gameObject.SetActive(false);
+            miss.gameObject.SetActive(false);
+        }
+        void RandomizeShips()
+        {
+            for (int row = 0; row < nRows; row++)
             {
-                if (randomNumber >= 5)
+                for (int col = 0; col < nCols; col++)
                 {
-                    cellType = CellType.Ship;
+                    grid[row, col] = Random.Range(0, 11) > 5 ? 1 : 0;
                 }
-                else
-                {
-                    cellType = CellType.Empty;
-                }
-                Instantiate(cellPrefab, gridRoot);
             }
         }
-        [ContextMenu("End Game")]
+
         void TryEndGame()
         {
             // Check every row
@@ -214,11 +219,6 @@ namespace Battleship
             winLabel.SetActive(true);
             // Stop timer
             CancelInvoke("IncrementTime");
-        }
-        public enum CellType 
-        {
-            Empty = 0,
-            Ship = 1
         }
     }
 }
