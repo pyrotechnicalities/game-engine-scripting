@@ -6,9 +6,16 @@ namespace ClassDemo
 {
     public class Player : MonoBehaviour
     {
-        public int health = 10;
+        [SerializeField]
+        [Tooltip("How much damage the player can take")]
+        [Range(0f, 100f)]
+        private float health = 10;
 
-        public void Damage(int amt)
+        [SerializeField]
+        [TextArea(1,5)]
+        private string Name;
+
+        public void Damage(float amt)
         {
             health -= amt;
         }
@@ -24,6 +31,15 @@ namespace ClassDemo
         {
             Enemy target = FindNewTarget();
             target.Damage(10);
+
+            // play sound
+        }
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                // play sound on space
+            }
         }
     }
 }

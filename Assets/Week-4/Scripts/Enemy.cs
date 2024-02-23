@@ -6,11 +6,11 @@ namespace ClassDemo
 {
     public class Enemy : MonoBehaviour
     {
-        public int health = 10;
+        public float health = 10;
 
         [SerializeField] private Player target;
 
-        public void Damage(int amt)
+        public void Damage(float amt)
         {
             health -= amt;
         }
