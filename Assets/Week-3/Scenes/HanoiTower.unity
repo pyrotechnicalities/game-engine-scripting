@@ -1125,12 +1125,12 @@ GameObject:
   - component: {fileID: 761358285}
   - component: {fileID: 761358284}
   m_Layer: 5
-  m_Name: PegIndicatior1
+  m_Name: PegIndicator1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &761358283
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1938,7 +1938,11 @@ MonoBehaviour:
   peg1Transform: {fileID: 1336324047}
   peg2Transform: {fileID: 1777107767}
   peg3Transform: {fileID: 1583368591}
-  peg1: 00000000020000000300000004000000
+  pegIndicator1: {fileID: 761358282}
+  pegIndicator2: {fileID: 1074194986}
+  pegIndicator3: {fileID: 969155011}
+  winLabel: {fileID: 554920983}
+  peg1: 01000000020000000300000004000000
   peg2: 00000000000000000000000000000000
   peg3: 00000000000000000000000000000000
   currentPeg: 1

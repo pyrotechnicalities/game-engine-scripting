@@ -9,10 +9,10 @@ public class HanoiTower : MonoBehaviour
     [SerializeField] private Transform peg1Transform;
     [SerializeField] private Transform peg2Transform;
     [SerializeField] private Transform peg3Transform;
-    GameObject pegIndicator1;
-    GameObject pegIndicator2;
-    GameObject pegIndicator3;
-    GameObject winLabel;
+    [SerializeField] GameObject pegIndicator1;
+    [SerializeField] GameObject pegIndicator2;
+    [SerializeField] GameObject pegIndicator3;
+    [SerializeField] GameObject winLabel;
 
     [SerializeField] private int[] peg1 = { 1, 2, 3, 4 };
     [SerializeField] private int[] peg2 = { 0, 0, 0, 0 };
@@ -43,8 +43,6 @@ public class HanoiTower : MonoBehaviour
         Transform toPeg = GetPegTransform(currentPeg + 1);
         disc.SetParent(toPeg);
 
-        TurnOnPegIndicator();
-
         TryWinGame();
     }
 
@@ -68,21 +66,23 @@ public class HanoiTower : MonoBehaviour
         MoveNumber(fromArray, fromIndex, toArray, toIndex);
 
         Transform disc = PopDiscFromCurrentPeg();
-        Transform toPeg = GetPegTransform(currentPeg + 1);
+        Transform toPeg = GetPegTransform(currentPeg - 1);
         disc.SetParent(toPeg);
-
-        TurnOnPegIndicator();
 
         TryWinGame();
     }
     public void IncrementPegNumber()
     {
+        TurnOffPegIndicator();
         currentPeg++;
+        TurnOnPegIndicator();
     }
 
     public void DecrementPegNumber()
     {
+        TurnOffPegIndicator();
         currentPeg--;
+        TurnOnPegIndicator();
     }
 
     Transform PopDiscFromCurrentPeg()
@@ -161,40 +161,49 @@ public class HanoiTower : MonoBehaviour
 
         return -1;
     }
-    bool CheckIfPegIsFull(int[] peg)
+    bool IsPegFull(int[] peg)
     {
-            if (peg.Length == 4)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+        for (int i = 0; i < peg.Length; i++)
+        {
+            if (GetTopNumberIndex(peg) == 0) return true;
+        }
+
+        return false;
     }
     void TurnOnPegIndicator()
     {
         if (currentPeg == 1)
         {
-            pegIndicator1 = GameObject.Find("PegIndicator1");
             pegIndicator1.SetActive(true);
         }
         else if (currentPeg == 2)
         {
-            pegIndicator2 = GameObject.Find("PegIndicator2");
             pegIndicator2.SetActive(true);
         }
         else
         {
-            pegIndicator3 = GameObject.Find("PegIndicator3");
             pegIndicator3.SetActive(true);
+        }
+    }
+    void TurnOffPegIndicator()
+    {
+        if (currentPeg == 1)
+        {
+            pegIndicator1.SetActive(false);
+        }
+        else if (currentPeg == 2)
+        {
+            pegIndicator2.SetActive(false);
+        }
+        else
+        {
+            pegIndicator3.SetActive(false);
         }
     }
     void TryWinGame()
     {
-        if (CheckIfPegIsFull(peg3) == true)
+        if (IsPegFull(peg3) == true)
         {
-            winLabel = GameObject.Find("WinLabel");
             winLabel.SetActive(true);
         }
         else
