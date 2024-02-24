@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Net;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class HanoiTower : MonoBehaviour
@@ -7,6 +9,10 @@ public class HanoiTower : MonoBehaviour
     [SerializeField] private Transform peg1Transform;
     [SerializeField] private Transform peg2Transform;
     [SerializeField] private Transform peg3Transform;
+    GameObject pegIndicator1;
+    GameObject pegIndicator2;
+    GameObject pegIndicator3;
+    GameObject winLabel;
 
     [SerializeField] private int[] peg1 = { 1, 2, 3, 4 };
     [SerializeField] private int[] peg2 = { 0, 0, 0, 0 };
@@ -27,17 +33,19 @@ public class HanoiTower : MonoBehaviour
         int[] toArray = GetPeg(currentPeg + 1);
         int toIndex = GetIndexOfFreeSlot(toArray);
 
-        if ( toIndex == -1) return;
+        if (toIndex == -1) return;
 
         if (CanAddToPeg(fromArray[fromIndex], toArray) == false) return;
 
         MoveNumber(fromArray, fromIndex, toArray, toIndex);
 
         Transform disc = PopDiscFromCurrentPeg();
-        Transform toPeg = GetPegTransform(currentPeg +1);
+        Transform toPeg = GetPegTransform(currentPeg + 1);
         disc.SetParent(toPeg);
 
-        // check win
+        TurnOnPegIndicator();
+
+        TryWinGame();
     }
 
     [ContextMenu("Move Left")]
@@ -62,6 +70,10 @@ public class HanoiTower : MonoBehaviour
         Transform disc = PopDiscFromCurrentPeg();
         Transform toPeg = GetPegTransform(currentPeg + 1);
         disc.SetParent(toPeg);
+
+        TurnOnPegIndicator();
+
+        TryWinGame();
     }
     public void IncrementPegNumber()
     {
@@ -83,8 +95,8 @@ public class HanoiTower : MonoBehaviour
     Transform GetPegTransform(int pegNumber)
     {
         // Alt way to find peg
-       // GameObject pegObject = GameObject.Find("Peg-" + pegNumber.ToString());
-       // return pegObject.transform;
+        // GameObject pegObject = GameObject.Find("Peg-" + pegNumber.ToString());
+        // return pegObject.transform;
 
         // Can also set up everything ourselves
         if (pegNumber == 1) return peg1Transform;
@@ -148,5 +160,46 @@ public class HanoiTower : MonoBehaviour
         }
 
         return -1;
+    }
+    bool CheckIfPegIsFull(int[] peg)
+    {
+            if (peg.Length == 4)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+    }
+    void TurnOnPegIndicator()
+    {
+        if (currentPeg == 1)
+        {
+            pegIndicator1 = GameObject.Find("PegIndicator1");
+            pegIndicator1.SetActive(true);
+        }
+        else if (currentPeg == 2)
+        {
+            pegIndicator2 = GameObject.Find("PegIndicator2");
+            pegIndicator2.SetActive(true);
+        }
+        else
+        {
+            pegIndicator3 = GameObject.Find("PegIndicator3");
+            pegIndicator3.SetActive(true);
+        }
+    }
+    void TryWinGame()
+    {
+        if (CheckIfPegIsFull(peg3) == true)
+        {
+            winLabel = GameObject.Find("WinLabel");
+            winLabel.SetActive(true);
+        }
+        else
+        {
+            return;
+        }
     }
 }
