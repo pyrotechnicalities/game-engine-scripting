@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -30,7 +31,18 @@ namespace ClassDemo
         void Attack()
         {
             Enemy target = FindNewTarget();
-            target.Damage(10);
+            // how to get movement working with DOTween
+            Vector3 origin = transform.position;
+
+            transform.DOMove(target.transform.position, 1f)
+                    .OnComplete(() =>
+                    {
+                        target.Damage(10);
+                        // what happens when we get there
+
+                        // go back
+                        transform.DOMove(origin, 1f);
+                    });
 
             // play sound
         }
