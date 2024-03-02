@@ -9,40 +9,50 @@ namespace NotTheBees
     public class Bee : MonoBehaviour
     {
         private Hive homeHive;
-        public Hive hive;
-        public Flower flower;
 
         public void Init(Hive hive)
         {
-            hive = homeHive;
+            homeHive = hive;
+        }
+        // Start is called before the first frame update
+        void Start()
+        {
+            CheckAnyFlower();
+        }
+        private Flower GetRandomFlower()
+        {
+            Flower[] flowers = FindObjectsByType<Flower>(FindObjectsSortMode.None);
+            int randomIndex = Random.Range(0, flowers.Length);
+            return flowers[randomIndex];
+
+        }
+        private Hive GetHomeHive()
+        {
+            Hive[] hives = FindObjectsByType<Hive>(FindObjectsSortMode.None);
+            int hiveIndex = Random.Range(0, hives.Length);
+            return hives[hiveIndex];
         }
         public void CheckAnyFlower()
         {
-            FindObjectsByType<Flower> (FindObjectsSortMode.None);
-            transform.DOMove(flower.transform.position, 1f).OnComplete(() =>
+            Flower foundFlower = GetRandomFlower();
+            Hive homeHive = GetHomeHive();
+
+            transform.DOMove(foundFlower.transform.position, 2f).OnComplete(() =>
             {
-                flower.CanTakeNectar();
-                if (flower.CanTakeNectar() == true)
-                {
-                    flower.TakeNectar();
-                    ReturnToHive();
-                }
-                else
+                if (foundFlower.CanTakeNectar() == false)
                 {
                     CheckAnyFlower();
                 }
-
-
+                else
+                {
+                    foundFlower.TakeNectar();
+                    transform.DOMove(homeHive.transform.position, 2f).OnComplete(() =>
+                    {
+                        homeHive.GiveNectar();
+                        CheckAnyFlower();
+                    }).SetEase(Ease.Linear);
+                }
             }).SetEase(Ease.Linear);
-        }
-        public void ReturnToHive()
-        {
-            FindObjectsByType<Hive>(FindObjectsSortMode.None);
-            transform.DOMove(homeHive.transform.position, 1f).OnComplete(() =>
-            {
-                hive.GiveNectar();
-            }).SetEase(Ease.Linear);
-            CheckAnyFlower();
         }
     }
 }

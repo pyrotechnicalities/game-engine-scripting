@@ -29,7 +29,7 @@ namespace NotTheBees
         {
             CurrentTime += Time.deltaTime;
 
-            if (CurrentTime == NectarProductionTimer)
+            if (CurrentTime >= NectarProductionTimer)
             {
                 HasNectar = true;
                 GetComponent<SpriteRenderer>().color = Color.white;

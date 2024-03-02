@@ -12,17 +12,17 @@ namespace NotTheBees
         private float CurrentTime = 0f;
         int NectarStash = 0;
         int HoneyStash = 0;
-        private Bee[] bees = new Bee[4];
+        private Bee[] bees = new Bee[2];
         public GameObject beePrefab;
-        private Bee beeRef;
 
         // Start is called before the first frame update
         void Start()
         {
             foreach (var bee in bees)
             {
-                Instantiate(beePrefab);
-                beeRef.Init(thisHive);
+                GameObject newBeeObject = Instantiate(beePrefab);
+                Bee newBee = newBeeObject.GetComponent<Bee>();
+                newBee.Init(thisHive);
             }
         }
 
@@ -39,7 +39,7 @@ namespace NotTheBees
         {
             CurrentTime += Time.deltaTime;
 
-            if (CurrentTime == HoneyProductionTimer)
+            if (CurrentTime >= HoneyProductionTimer)
             {
                 NectarStash--;
                 HoneyStash++;
