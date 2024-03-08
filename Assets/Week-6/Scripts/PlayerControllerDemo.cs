@@ -14,6 +14,7 @@ public class Week6Demo : MonoBehaviour
     private float mouseDeltaY = 0f;
     private float cameraRotX = 0f;
     private int rotDir = 0;
+    private bool grounded;
 
     InputAction move;
     InputAction fire;
@@ -100,6 +101,7 @@ public class Week6Demo : MonoBehaviour
     }
     void FixedUpdate()
     {
+        grounded = IsGrounded();
         Vector2 input = move.ReadValue<Vector2>();
         Vector3 direction = (input.x * transform.right) + (transform.forward * input.y);
 
@@ -111,7 +113,32 @@ public class Week6Demo : MonoBehaviour
     }
     void Jump(InputAction.CallbackContext context)
     {
+        if (grounded == false) return;
         rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
         Debug.Log("Jump!");
+    }
+    bool IsGrounded()
+    {
+        int layerMask = 1 << 3;
+        RaycastHit hit;
+
+        if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.up * -1), out hit, 1.1f, layerMask))
+        {
+            // use Debug.DrawRay to visualize the ray
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    private void Damage()
+    {
+        Debug.Log("Player has been damaged");
+    }
+    private void OnTriggerEnter(Collider other)
+    {
+        Debug.Log("Player has entered a trigger");
+        if (other.transform.tag == "Bullet") Damage();
     }
 }
