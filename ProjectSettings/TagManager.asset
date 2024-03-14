@@ -6,6 +6,11 @@ TagManager:
   tags:
   - Enemy Tag
   - Bullet
+  - Goal
+  - Trap
+  - Key
+  - Coin
+  - Door
   layers:
   - Default
   - TransparentFX
