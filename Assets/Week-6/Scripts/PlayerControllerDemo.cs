@@ -21,15 +21,16 @@ namespace Maze
         private int rotDir = 0;
         private int playerHealth = 100;
         private int numCoins = 0;
-        private int numKeys = 0;
-        private bool hasKeys = false;
+        public int numKeys = 0;
+        public bool hasKeys = false;
         private bool grounded;
 
         [SerializeField] private DoorTrigger trigger;
         [SerializeField] GameObject winLabel;
+        [SerializeField] GameObject canOpenDoorLabel;
         [SerializeField] TextMeshProUGUI hpLabel;
         [SerializeField] TextMeshProUGUI coinsLabel;
-        [SerializeField] TextMeshProUGUI keysLabel;
+        [SerializeField] public TextMeshProUGUI keysLabel;
 
         InputAction move;
         InputAction fire;
@@ -173,6 +174,14 @@ namespace Maze
         private void WinGame()
         {
             winLabel.SetActive(true);
+        }
+        public void OpenDoor()
+        {
+            canOpenDoorLabel.SetActive(true);
+        }
+        public void LeaveDoor()
+        {
+            canOpenDoorLabel.SetActive(false);
         }
         private void OnTriggerEnter(Collider other)
         {

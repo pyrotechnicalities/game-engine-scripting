@@ -8,6 +8,7 @@ namespace Maze
     {
         [SerializeField] Transform m_DoorTransform;
         [SerializeField] Vector3 m_PositionOpenOffset;
+        [SerializeField] Week6Demo player;
 
         private Vector3 m_PositionClose;
         private Vector3 m_PositionOpen;
@@ -32,7 +33,14 @@ namespace Maze
         {
             Debug.Log("Door trigger has been triggered");
             // m_DoorTransform.position = m_PositionOpen + m_PositionClose;
-            Open();
+            if(player.hasKeys == true)
+            {
+                Open();
+            }
+            else
+            {
+                player.OpenDoor();
+            }
         }
         private void OnTriggerStay(Collider other)
         {
@@ -41,11 +49,15 @@ namespace Maze
         private void OnTriggerExit(Collider other)
         {
             Debug.Log("Something has left the trigger");
+            player.LeaveDoor();
             m_DoorTransform.position = m_PositionClose;
             m_IsOpening = false;
         }
         public void Open()
         {
+            player.numKeys = player.numKeys - 1;
+            player.keysLabel.text = string.Format("Keys: {0}", player.numKeys);
+            if (player.numKeys == 0) { player.hasKeys = false; }
             m_IsOpening = true;
         }
     }
