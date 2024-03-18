@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -11,7 +12,11 @@ namespace Midterm
         [SerializeField] TextMeshProUGUI question;
         [SerializeField] TextMeshProUGUI result;
         [SerializeField] TextMeshProUGUI scoreLabel;
+        [SerializeField] TMP_InputField inputAnswer;
+        [SerializeField] GameObject resultLabel;
+        [SerializeField] Button pressedButton;
         private int score;
+        private string input = " ";
 
         // stores questions, first five elements are category one, next five are category 2, and so on
         string[] questions = new string[]
@@ -49,7 +54,7 @@ namespace Midterm
         };
         string[] answers = new string[]
         {
-            "cat1a1",
+            "boo",
             "cat1a2",
             "cat1a3",
             "cat1a4",
@@ -80,43 +85,61 @@ namespace Midterm
             "cat6a4",
             "cat6a5"
         };
-
+        public void GetAnswer(string userInput)
+        {
+            input = userInput;
+        }
         public void CheckAnswer(int button)
         {
-            question.text = questions[button];
-
-            InputField field = GameObject.Find("InputAnswer").GetComponent<InputField>();
-            string userInput = field.text;
-
-            if (userInput.ToUpper() == answers[button].ToUpper())
+            pressedButton.currentButton = button;
+            if (input.ToLower() == answers[pressedButton.currentButton].ToLower())
             {
-                IncrementScore(button);
+                ShowResultLabel();
+                result.text = $"You were correct! You gain {pressedButton.buttonValue} points.";
+                IncrementScore(pressedButton.buttonValue);
+                ChangeScoreLabel();
             }
             else
             {
-                DecrementScore(button);
+                ShowResultLabel();
+                result.text = $"You were incorrect. You lose {pressedButton.buttonValue} points.";
+                DecrementScore(pressedButton.buttonValue);
+                ChangeScoreLabel();
             }
+        }
+        public void DisplayQuestion(int button)
+        {
+            question.text = questions[pressedButton.currentButton];
         }
         public void IncrementScore(int button)
         {
             // score plus value of button 
-            score = score + button;
+            score = score + pressedButton.buttonValue;
         }
         public void DecrementScore(int button)
         {
             // score minus value of button
-            score = score - button;
+            score = score - pressedButton.buttonValue;
         }
-        public void ChangeScoreLabel()
+        private void ChangeScoreLabel()
         {
             scoreLabel.text = string.Format("Score: {0}", score);
         }
+        private void ShowResultLabel()
+        {
+            resultLabel.SetActive(true);
+        }
+        public void ClearInputField()
+        {
+            resultLabel.SetActive(false);
+            input = "";
+            inputAnswer.text = "";
+        }
 
         // CURRENT ISSUES:
-        // -Get input field to work
+        // -Fix check answer
         // -Fix increment and decrement score (have them add or subtract the correct values associated with the button that was pressed)
         // -Turn off buttons that have been pressed
-        // -When button is pressed, pass a value in that corresponds to the right index value
-        // Add questions and answers
+        // -Add questions and answers
     }
 }
