@@ -21,102 +21,104 @@ namespace Midterm
         // stores questions, first five elements are category one, next five are category 2, and so on
         string[] questions = new string[]
         {
-            "cat1q1",
-            "cat1q2",
-            "cat1q3",
-            "cat1q4",
-            "cat1q5",
-            "cat2q1",
-            "cat2q2",
-            "cat2q3",
-            "cat2q4",
-            "cat2q5",
-            "cat3q1",
-            "cat3q2",
-            "cat3q3",
-            "cat3q4",
-            "cat3q5",
-            "cat4q1",
-            "cat4q2",
-            "cat4q3",
-            "cat4q4",
-            "cat4q5",
-            "cat5q1",
-            "cat5q2",
-            "cat5q3",
-            "cat5q4",
-            "cat5q5",
-            "cat6q1",
-            "cat6q2",
-            "cat6q3",
-            "cat6q4",
-            "cat6q5"
+            "What video game series is used as the \"Face of Nintendo\"?",
+            "Which version of The Sims is free to play on Steam?",
+            "How many entries are there in the Persona series, not counting spinoffs?",
+            "How many times was Breath of the Wild delayed before its release in 2017?",
+            "Where does the theme music for Tetris come from?",
+            "What real-world event does Suzanne Collins cite as an influnce on The Hunger Games?",
+            "What city does the Divergent series take place in?",
+            "What series is Kaz Brekker one of the protagonists of?",
+            "How many books currently make up the Riordanverse?",
+            "What's the name of the contemporary fantasy series set in a fictional town in Virginia?",
+            "Who is the author of Fullmetal Alchemist?",
+            "Which artist sang the first opening of Jujutsu Kaisen?",
+            "What year did Naruto end?",
+            "What animation style does Trigun: Stampede use?",
+            "What was the first anime movie to win an Oscar?",
+            "Calico cats are typically what sex?",
+            "What does a cat use for balance?",
+            "What is the name of the phobia of cats?",
+            "What is a group of cats called?",
+            "How many muscles does a cat have in its ear?",
+            "Which line is the busiest?",
+            "Which line is the only one to not go all the way to the Loop?",
+            "When did the CTA take over duties of running the L?",
+            "How many different kinds of trains are currently operating through the whole CTA system?",
+            "What stop is the only one in the Loop that has been restored to its original appearance?",
+            "What's the name of the track that plays while Anakin and Obi-Wan duel on Mustafar in Episode III?",
+            "What is the Mandalorian's true name?",
+            "Who typically wields a blue lightsaber?",
+            "What planet was Jyn Erso imprisoned on in the beginning of Rogue One?",
+            "What is the more common name of Form IV?"
         };
         string[] answers = new string[]
         {
-            "boo",
-            "cat1a2",
-            "cat1a3",
-            "cat1a4",
-            "cat1a5",
-            "cat2a1",
-            "cat2a2",
-            "cat2a3",
-            "cat2a4",
-            "cat2a5",
-            "cat3a1",
-            "cat3a2",
-            "cat3a3",
-            "cat3a4",
-            "cat3a5",
-            "cat4a1",
-            "cat4a2",
-            "cat4a3",
-            "cat4a4",
-            "cat4a5",
-            "cat5a1",
-            "cat5a2",
-            "cat5a3",
-            "cat5a4",
-            "cat5a5",
-            "cat6a1",
-            "cat6a2",
-            "cat6a3",
-            "cat6a4",
-            "cat6a5"
+            "super mario",
+            "the sims 4",
+            "six",
+            "twice",
+            "a russian folk song",
+            "the iraq war",
+            "chicago",
+            "six of crows",
+            "twenty two",
+            "the raven cycle",
+            "hiromu arakawa",
+            "eve",
+            "2014",
+            "3dcg",
+            "spirited away",
+            "female",
+            "the tail",
+            "ailurophobia",
+            "a clowder",
+            "thirty two",
+            "the red line",
+            "the yellow line",
+            "1947",
+            "four",
+            "quincy",
+            "duel of the fates",
+            "din djarin",
+            "jedi guardians",
+            "wobani",
+            "ataru"
         };
-        public void GetAnswer(string userInput)
+        public string GetAnswer(string userInput)
         {
-            input = userInput;
+            input = inputAnswer.text;
+            return input;
         }
-        public void CheckAnswer(int button)
+        public void CheckAnswer(string userInput)
         {
-            pressedButton.currentButton = button;
-            if (input.ToLower() == answers[pressedButton.currentButton].ToLower())
+            input = GetAnswer(userInput).ToLower();
+            if (input == answers[pressedButton.currentButton])
             {
                 ShowResultLabel();
                 result.text = $"You were correct! You gain {pressedButton.buttonValue} points.";
-                IncrementScore(pressedButton.buttonValue);
+                IncrementScore();
                 ChangeScoreLabel();
             }
             else
             {
                 ShowResultLabel();
                 result.text = $"You were incorrect. You lose {pressedButton.buttonValue} points.";
-                DecrementScore(pressedButton.buttonValue);
+                DecrementScore();
                 ChangeScoreLabel();
             }
         }
         public void DisplayQuestion(int button)
         {
+            pressedButton.currentButton = button;
             question.text = questions[pressedButton.currentButton];
         }
-        public void IncrementScore(int button)
+        public void IncrementScore()
         {
             // score plus value of button 
             score = score + pressedButton.buttonValue;
         }
-        public void DecrementScore(int button)
+        public void DecrementScore()
         {
             // score minus value of button
             score = score - pressedButton.buttonValue;
@@ -135,11 +137,5 @@ namespace Midterm
             input = "";
             inputAnswer.text = "";
         }
-
-        // CURRENT ISSUES:
-        // -Fix check answer
-        // -Fix increment and decrement score (have them add or subtract the correct values associated with the button that was pressed)
-        // -Turn off buttons that have been pressed
-        // -Add questions and answers
     }
 }
