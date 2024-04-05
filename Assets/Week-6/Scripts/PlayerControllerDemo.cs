@@ -192,5 +192,9 @@ namespace Maze
             if (other.transform.tag == "Coin") AddCoin();
             if (other.transform.tag == "Key") AddKey();
         }
+
+        // TO-DO: get Reset working w/Events like shown in class. 
+        // Possible solution: Make "maze manager" script to make this code more neat
+        // Create a bool variable to track if the player has picked up the goal object, at which point the event is triggered
     }
 }

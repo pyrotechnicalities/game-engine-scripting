@@ -8,7 +8,7 @@ namespace Maze
     {
         private void OnTriggerEnter(Collider other)
         {
-            Destroy(gameObject);
+            gameObject.SetActive(false);
         }
     }
 }

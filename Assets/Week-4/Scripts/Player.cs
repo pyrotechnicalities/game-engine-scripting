@@ -12,6 +12,8 @@ namespace ClassDemo
         [Range(0f, 100f)]
         private float health = 10;
 
+        [SerializeField] GameObject player;
+
         [SerializeField]
         [TextArea(1,5)]
         private string Name;
@@ -45,6 +47,14 @@ namespace ClassDemo
                     });
 
             // play sound
+        }
+        void OnGameOver()
+        {
+            player.SetActive(false);
+        }
+        private void Start()
+        {
+            GameManager.AddGameOverEventListener(OnGameOver);
         }
         private void Update()
         {
