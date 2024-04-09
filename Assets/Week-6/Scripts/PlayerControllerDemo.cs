@@ -24,9 +24,15 @@ namespace Maze
         public int numKeys = 0;
         public bool hasKeys = false;
         private bool grounded;
+        private bool hasGoal = false;
+        private Vector3 originalPosition;
 
         [SerializeField] private DoorTrigger trigger;
+        [SerializeField] private MazeManager mazeManager;
+        [SerializeField] private GoalScript goal;
         [SerializeField] GameObject winLabel;
+        [SerializeField] GameObject loseLabel;
+        [SerializeField] GameObject resetButton;
         [SerializeField] GameObject canOpenDoorLabel;
         [SerializeField] TextMeshProUGUI hpLabel;
         [SerializeField] TextMeshProUGUI coinsLabel;
@@ -73,12 +79,15 @@ namespace Maze
         // Start is called before the first frame update
         void Start()
         {
-
+            originalPosition = transform.position;
+            MazeManager.AddGameOverEventListener(OnGameOver);
         }
         private void Update()
         {
             HandleHorizontalRotation();
             HandleVerticalRotation();
+            if (playerHealth == 0) { mazeManager.GameOver(); }
+            if (hasGoal == true) { mazeManager.GameOver(); } 
         }
         void HandleHorizontalRotation()
         {
@@ -105,14 +114,10 @@ namespace Maze
 
                 var targetRotation = Quaternion.Euler(Vector3.right * cameraRotX);
 
-
                 //Vector3 angle = new Vector3(rotation * Time.deltaTime * rotDir, 0, 0);
-
-                Debug.Log(Camera.main.transform.localRotation.x);
 
                 Camera.main.transform.localRotation = targetRotation;
                 //Camera.main.transform.Rotate(angle, Space.Self);
-
             }
         }
         void FixedUpdate()
@@ -135,7 +140,6 @@ namespace Maze
         {
             if (grounded == false) return;
             rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
-            Debug.Log("Jump!");
         }
         bool IsGrounded()
         {
@@ -155,7 +159,6 @@ namespace Maze
         private void Damage()
         {
             // hit trap
-            Debug.Log("Player has been damaged");
             playerHealth = playerHealth - 5;
             hpLabel.text = string.Format("HP: {0}", playerHealth);
         }
@@ -171,10 +174,6 @@ namespace Maze
             numKeys++;
             keysLabel.text = string.Format("Keys: {0}", numKeys);
         }
-        private void WinGame()
-        {
-            winLabel.SetActive(true);
-        }
         public void OpenDoor()
         {
             canOpenDoorLabel.SetActive(true);
@@ -183,18 +182,38 @@ namespace Maze
         {
             canOpenDoorLabel.SetActive(false);
         }
+        private void PickupGoal()
+        {
+            hasGoal = true;
+        }
         private void OnTriggerEnter(Collider other)
         {
-            Debug.Log("Player has entered a trigger");
-            if (other.transform.tag == "Goal") WinGame();
+            if (other.transform.tag == "Goal") PickupGoal(); 
             if (other.transform.tag == "Door" && hasKeys == true) trigger.Open();
             if (other.transform.tag == "Trap") Damage();
             if (other.transform.tag == "Coin") AddCoin();
             if (other.transform.tag == "Key") AddKey();
         }
-
-        // TO-DO: get Reset working w/Events like shown in class. 
-        // Possible solution: Make "maze manager" script to make this code more neat
-        // Create a bool variable to track if the player has picked up the goal object, at which point the event is triggered
+        private void OnGameOver()
+        {
+            if (playerHealth == 0) { loseLabel.SetActive(true); resetButton.SetActive(true); }
+            if (hasGoal == true) { winLabel.SetActive(true); resetButton.SetActive(true); }
+        }
+        public void ResetMaze()
+        {
+            loseLabel.SetActive(false);
+            winLabel.SetActive(false);
+            resetButton.SetActive(false);
+            transform.position = originalPosition;
+            playerHealth = 100;
+            hpLabel.text = string.Format("HP: {0}", playerHealth);
+            numCoins = 0;
+            coinsLabel.text = string.Format("Coins: {0}", numCoins);
+            numKeys = 0;
+            keysLabel.text = string.Format("Keys: {0}", numKeys);
+            hasKeys = false;
+            hasGoal = false;
+            goal.ResetGoalItem();
+        }
     }
 }
