@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 namespace CharacterEditor
 {
@@ -18,10 +19,12 @@ namespace CharacterEditor
 
         public void Load()
         {
-            MaterialManager.Get(BodyTypes.Head, PlayerPrefs.GetInt("HeadID"));
-            MaterialManager.Get(BodyTypes.Body, PlayerPrefs.GetInt("BodyID"));
-            MaterialManager.Get(BodyTypes.Arm, PlayerPrefs.GetInt("ArmID"));
-            MaterialManager.Get(BodyTypes.Leg, PlayerPrefs.GetInt("LegID"));
+            m_Head.material = MaterialManager.Get(BodyTypes.Head, PlayerPrefs.GetInt("HeadID"));
+            m_Body.material = MaterialManager.Get(BodyTypes.Body, PlayerPrefs.GetInt("BodyID"));
+            m_ArmR.material = MaterialManager.Get(BodyTypes.Arm, PlayerPrefs.GetInt("ArmID"));
+            m_ArmL.material = MaterialManager.Get(BodyTypes.Arm, PlayerPrefs.GetInt("ArmID"));
+            m_LegR.material = MaterialManager.Get(BodyTypes.Leg, PlayerPrefs.GetInt("LegID"));
+            m_LegL.material = MaterialManager.Get(BodyTypes.Leg, PlayerPrefs.GetInt("LegID"));
         }
     }
 }

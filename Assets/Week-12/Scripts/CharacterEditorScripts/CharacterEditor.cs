@@ -53,13 +53,10 @@ namespace CharacterEditor
             }
             
             character.Load();
-            //TODO: Make a switch case for each BodyType and save the value of id to the correct PlayerPref
         }
 
         void NextBodyPart()
         {
-            //TODO: Setup a switch case that will go through the different body types
-            //      ie if the current type is Head and we click next then set it to Body
             switch (bodyType)
             {
                 case BodyTypes.Head: bodyType = BodyTypes.Body;
@@ -87,8 +84,6 @@ namespace CharacterEditor
                 default: PlayerPrefs.SetInt("HeadID", id);
                     break;
             }
-            //TODO: Then setup another switch case that will get the current saved value
-            //      from the player prefs for the current body type and set it to id
         }
 
         void LoadGame()
