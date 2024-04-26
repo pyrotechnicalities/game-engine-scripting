@@ -25,4 +25,10 @@ public class LoadDataDemo : MonoBehaviour
 
         data = JsonUtility.FromJson<DataDemo>(PlayerPrefs.GetString("data"));
     }
+    [ContextMenu("Do File Load")]
+    public void LoadFileTest()
+    {
+        TextAsset userDataFile = Resources.Load<TextAsset>("SaveData");
+        data = JsonUtility.FromJson<DataDemo>(userDataFile.text);
+    }
 }

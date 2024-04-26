@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
+using System.IO;
 
 public class SaveDataDemo : MonoBehaviour
 {
@@ -43,5 +45,22 @@ public class SaveDataDemo : MonoBehaviour
         PlayerPrefs.SetString("data", json);
 
         PlayerPrefs.Save();
+    }
+    [ContextMenu("Do File Save")]
+    public void SaveToFile()
+    {
+        string path = "Assets/Resources/SaveData.txt";
+        StreamWriter writer = new StreamWriter(path, false);
+
+        data.score = score;
+        data.username = username;
+        data.balance = balance;
+        data.position = transform.position;
+
+        string json = JsonUtility.ToJson(data);
+        writer.WriteLine(json);
+        writer.Close();
+
+        AssetDatabase.ImportAsset(path);
     }
 }
