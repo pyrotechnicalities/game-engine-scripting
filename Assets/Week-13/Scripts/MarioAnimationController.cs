@@ -7,11 +7,25 @@ namespace MarioAnimations
     public class MarioAnimationController : MonoBehaviour
     {
         private Animator animator;
-        private MarioMovement mario;
         private void Awake()
         {
             animator = GetComponent<Animator>();
-            mario = GetComponent<MarioMovement>();
+        }
+        public void DoWalk()
+        {
+            animator.SetTrigger("Walk");
+        }
+        public void DoIdleWalk()
+        {
+            animator.ResetTrigger("Walk");
+        }
+        public void DoJump()
+        {
+            animator.SetBool("Jump", true);
+        }
+        public void DoIdleJump()
+        {
+            animator.SetBool("Jump", false);
         }
     }
 }

@@ -2,6 +2,7 @@ using Maze;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -25,6 +26,7 @@ namespace MarioAnimations
         InputAction look;
 
         PlayerControllerMappings playerMappings;
+        [SerializeField] MarioAnimationController marioAnim;
 
         Rigidbody rb;
         private void Awake()
@@ -96,13 +98,17 @@ namespace MarioAnimations
         void FixedUpdate()
         {
             grounded = IsGrounded();
+            if (grounded == true) { marioAnim.DoIdleJump(); }
             Vector2 input = move.ReadValue<Vector2>();
             Vector3 direction = (input.x * transform.right) + (transform.forward * input.y);
+            if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D)) { marioAnim.DoWalk(); }
+            else { marioAnim.DoIdleWalk(); }
 
             transform.position = transform.position + (direction * speed * Time.deltaTime);
         }
         void Jump(InputAction.CallbackContext context)
         {
+            marioAnim.DoJump();
             Debug.Log($"{grounded}");
             if (grounded == false) return;
             rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
