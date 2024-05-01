@@ -2,39 +2,40 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using TMPro;
+using UnityEditor;
 using UnityEngine;
+using UnityEngine.SocialPlatforms.Impl;
 
 namespace LevelCreator
 {
     public class LevelEditorManager : MonoBehaviour
     {
-        // TODO:
-        // - add ints for reward and enemy count similar to level number
-        // - label thing as described in getlvlnumber
-        // - save to JSON
         private string lvlNumberText = " ";
-        private int LvlNumber;
+        private int lvlNumber;
         private string lvlName = " ";
-        private string lvlReward = " ";
-        private string lvlEnemyCount = " ";
+        private string lvlRewardText = " ";
+        private int lvlReward;
+        private string lvlEnemyCountText = " ";
+        private int lvlEnemyCount;
         public LevelEditorData data;
 
         [SerializeField] TMP_InputField LevelNumberInput;
         [SerializeField] TMP_InputField LevelNameInput;
         [SerializeField] TMP_InputField LevelRewardInput;
         [SerializeField] TMP_InputField LevelEnemiesInput;
+        [SerializeField] GameObject ErrorMessage;
 
         public string GetLvlNumber(string userInput)
         {
-            bool result = int.TryParse(LevelNumberInput.text, out LvlNumber);
+            bool result = int.TryParse(LevelNumberInput.text, out lvlNumber);
             if (result == false)
             {
-                // turn on label that says "please enter a number" 
-                // then clear input field
+                ErrorMessage.SetActive(true);
+                LevelNumberInput.text = "";
             }
             else
             {
-                lvlNumberText = LvlNumber.ToString("D2");
+                lvlNumberText = lvlNumber.ToString("D2");
             }
             return lvlNumberText;
         }
@@ -45,13 +46,31 @@ namespace LevelCreator
         }
         public string GetLvlReward(string userInput)
         {
-            lvlReward = LevelRewardInput.text;
-            return lvlReward;
+            bool result = int.TryParse(LevelRewardInput.text, out lvlReward);
+            if (result == false)
+            {
+                ErrorMessage.SetActive(true);
+                LevelRewardInput.text = "";
+            }
+            else
+            {
+                lvlRewardText = lvlReward.ToString();
+            }
+            return lvlRewardText;
         }
         public string GetLvlEnemyCount(string userInput)
         {
-            lvlEnemyCount = LevelEnemiesInput.text;
-            return lvlEnemyCount;
+            bool result = int.TryParse(LevelEnemiesInput.text, out lvlEnemyCount);
+            if (result == false)
+            {
+                ErrorMessage.SetActive(true);
+                LevelEnemiesInput.text = "";
+            }
+            else
+            {
+                lvlEnemyCountText = lvlEnemyCount.ToString();
+            }
+            return lvlEnemyCountText;
         }
         public void StoreLvlNumber(string userInput)
         {
@@ -65,18 +84,33 @@ namespace LevelCreator
         }
         public void StoreLvlReward(string userInput)
         {
-            lvlReward = GetLvlReward(userInput);
-            Debug.Log(lvlReward);
+            lvlRewardText = GetLvlReward(userInput);
+            Debug.Log(lvlRewardText);
         }
         public void StoreLvlEnemies(string userInput)
         {
-            lvlEnemyCount = GetLvlEnemyCount(userInput);
-            Debug.Log(lvlEnemyCount);
+            lvlEnemyCountText = GetLvlEnemyCount(userInput);
+            Debug.Log(lvlEnemyCountText);
         }
         public void OnSave()
         {
-            string path = "Assets/Resources/Levels/Level_LevelNumber.txt";
+            string path = $"Assets/Resources/Levels/Level_{lvlNumberText}.txt";
             StreamWriter writer = new StreamWriter(path, false);
+
+            data.lvlNumber = lvlNumberText;
+            data.lvlName = lvlName;
+            data.lvlReward = lvlRewardText;
+            data.lvlEnemyCount = lvlEnemyCountText;
+
+            string json = JsonUtility.ToJson(data);
+            writer.WriteLine(json);
+            writer.Close();
+
+            AssetDatabase.ImportAsset(path);
+        }
+        public void ClearError()
+        {
+            ErrorMessage.SetActive(false);
         }
     }
 }
